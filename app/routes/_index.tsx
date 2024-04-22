@@ -1,41 +1,49 @@
-import type { MetaFunction } from "@remix-run/node";
+import React, { useState, useEffect } from "react";
+import PokemonCard from "../components/PokemonCard";
 
-export const meta: MetaFunction = () => {
+interface Pokemon {
+  id: number;
+  name: string;
+  types: string[];
+}
+
+export const meta = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Pokedex" },
+    { name: "A pokedex app", content: "Welcome to Pokedex!" },
   ];
 };
 
-export default function Index() {
+const Index: React.FC = () => {
+  const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    const storedPokemon = JSON.parse(localStorage.getItem("pokemonCollection") || "[]") as Pokemon[];
+    if (storedPokemon) {
+      setPokemonData(storedPokemon);
+    }
+  }, []);
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div className="flex items-center justify-center">
+      <div className="flex flex-col w-1/2 items-center justify-center">
+        {pokemonData.length > 0 ? (
+          pokemonData.map((pokemon, index) => (
+            <PokemonCard
+              key={index}
+              id={pokemon.id}
+              name={pokemon.name}
+              types={pokemon.types}
+            />
+          ))
+        ) : (
+          <h1 className="text-4xl text-gray-600">
+            You haven't added any Pokemons yet
+          </h1>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default Index;
