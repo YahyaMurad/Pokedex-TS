@@ -18,7 +18,9 @@ const Index: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
 
   useEffect(() => {
-    const storedPokemon = JSON.parse(localStorage.getItem("pokemonCollection") || "[]") as Pokemon[];
+    const storedPokemon = JSON.parse(
+      localStorage.getItem("pokemonCollection") || "[]"
+    ) as Pokemon[];
     if (storedPokemon) {
       setPokemonData(storedPokemon);
     }

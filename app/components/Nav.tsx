@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
 import { useState } from "react";
 import { GraphQLClient } from "graphql-request";
-
 interface Pokemon {
   id: number;
   name: string;
@@ -18,11 +17,10 @@ const PokeAPIquery = `
 
 const client = new GraphQLClient("https://beta.pokeapi.co/graphql/v1beta");
 
-// Debounce function
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
 
-  return function(this: ThisParameterType<T>, ...args: Parameters<T>) {
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       func.apply(this, args);
@@ -35,7 +33,6 @@ const Nav = () => {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-  // Debounced update function
   const debouncedUpdate = debounce(async () => {
     try {
       const data = await client.request<{ pokemon_v2_pokemon: Pokemon[] }>(
@@ -49,7 +46,7 @@ const Nav = () => {
     } catch (error) {
       console.error(error);
     }
-  }, 300); // Adjust the delay as needed
+  }, 300);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -57,7 +54,7 @@ const Nav = () => {
       setPokemonData([]);
       setShowDropdown(false);
     } else {
-      debouncedUpdate(); // Call the debounced function
+      debouncedUpdate();
     }
   };
 

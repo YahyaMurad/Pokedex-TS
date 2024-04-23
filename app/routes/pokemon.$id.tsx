@@ -1,4 +1,3 @@
-import React from "react";
 import { json, useLoaderData } from "@remix-run/react";
 import { useParams } from "@remix-run/react";
 import { GraphQLClient } from "graphql-request";
@@ -62,7 +61,11 @@ const PokemonDetails: React.FC = () => {
 
   const pokemonData = data.pokemon_v2_pokemon_by_pk;
 
-  if (!pokemonData.pokemon_v2_pokemontypes || !pokemonData.pokemon_v2_pokemonmoves || !pokemonData.pokemon_v2_pokemonstats) {
+  if (
+    !pokemonData.pokemon_v2_pokemontypes ||
+    !pokemonData.pokemon_v2_pokemonmoves ||
+    !pokemonData.pokemon_v2_pokemonstats
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -85,7 +88,7 @@ const PokemonDetails: React.FC = () => {
         exp={pokemonData.base_experience}
         height={pokemonData.height}
         weight={pokemonData.weight}
-        id={parseInt(id ?? '0')}
+        id={parseInt(id ?? "0")}
         types={types}
         moves={moves}
         stats={stats}
