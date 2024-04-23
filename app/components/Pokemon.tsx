@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@remix-run/react";
 import MoveCard from "./MoveCard";
 import StatBar from "./StatBar";
@@ -58,27 +58,32 @@ const Pokemon: React.FC<PokemonProps> = ({
     setIsInCollection(isInCollection);
   }, [id]);
 
-  const handleAddToCollection = () => {
-    const pokemon = {
-      name,
-      exp,
-      height,
-      weight,
-      id,
-      types,
-    };
-
+  const handleCollectionAction = () => {
     const existingCollection =
       JSON.parse(localStorage.getItem("pokemonCollection") || "[]") || [];
-
-    existingCollection.push(pokemon);
-
-    localStorage.setItem(
-      "pokemonCollection",
-      JSON.stringify(existingCollection)
-    );
-
-    setIsInCollection(true);
+    const isInCollection = existingCollection.some((p: any) => p.id === id);
+    if (isInCollection) {
+      const updatedCollection = existingCollection.filter((p: any) => p.id !== id);
+      localStorage.setItem(
+        "pokemonCollection",
+        JSON.stringify(updatedCollection)
+      );
+    } else {
+      const pokemon = {
+        name,
+        exp,
+        height,
+        weight,
+        id,
+        types,
+      };
+      existingCollection.push(pokemon);
+      localStorage.setItem(
+        "pokemonCollection",
+        JSON.stringify(existingCollection)
+      );
+    }
+    setIsInCollection(!isInCollection);
   };
 
   return (
@@ -133,10 +138,9 @@ const Pokemon: React.FC<PokemonProps> = ({
             <div className="flex justify-end">
               <button
                 className="btn self-end"
-                onClick={handleAddToCollection}
-                disabled={isInCollection}
+                onClick={handleCollectionAction}
               >
-                {isInCollection ? "Already in collection" : "Add to collection"}
+                {isInCollection ? "Remove from collection" : "Add to collection"}
               </button>
             </div>
           </div>
